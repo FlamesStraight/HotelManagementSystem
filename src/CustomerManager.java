@@ -46,14 +46,32 @@ public class CustomerManager {
             while(true){
                 String updateAnswer = checkInputValidity("\nWould you like to update it? (Y/N): ",false, false, true);
                 if(updateAnswer.equalsIgnoreCase("Y")) {
-                    String emailInput = checkInputValidity("\nUpdate your email: ", true, false, false);
-                    String phoneNumberInput = checkInputValidity("\nUpdate your phone number: ", false, true, false);
 
-                    customer.setEmail(emailInput);
-                    customer.setPhoneNumber(phoneNumberInput);
+                    while (true) {
+                        String emailInput = checkInputValidity("\n Update your email: ", true, false, false);
+                        if (emailInput.equalsIgnoreCase(customer.getEmail())) {
+                            System.out.println("\nError: New email must be different from your current email. Please try again...");
+                        }
+                        else {
+                            customer.setEmail(emailInput);
+                            break;
+                        }
+                    }
+
+                    while (true) {
+                        String phoneNumberInput = checkInputValidity("\n Update your phone number: ", false, true, false);
+                        if (phoneNumberInput.equalsIgnoreCase(customer.getPhoneNumber())) {
+                            System.out.println("\n Error: New phone number must be different from your current phone number. Please try again...");
+                        }
+                        else {
+                            customer.setPhoneNumber(phoneNumberInput);
+                            break;
+                        }
+                    }
 
                     overwriteCustomerData();
                     break;
+
                 }
                 else if(updateAnswer.equalsIgnoreCase("N")) {
                     break;
@@ -106,7 +124,7 @@ public class CustomerManager {
                 }
             }
             if(aPhoneNumber){
-                if(input.matches("\\d+")){
+                if (input.matches("\\d{10}")){
                     return input;
                 }
                 else{
