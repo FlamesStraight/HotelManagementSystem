@@ -2,22 +2,25 @@ import java.util.Scanner;
 
 public class Hotel {
     public void run(){
-
+        System.out.println("Welcome to the Hotel Booking System!");
         Scanner scanner = new Scanner(System.in);
 
-        System.out.print("Enter your full name: ");
-        String nameInput = scanner.nextLine();
+        String nameInput;
 
-        System.out.print("Enter your email: ");
-        String emailInput = scanner.nextLine();
+        while(true){
+            System.out.print("Enter your full name: ");
+            nameInput = scanner.nextLine();
 
-        System.out.print("Enter your phone number: ");
-        String phoneNumberInput = scanner.nextLine();
+            if (nameInput.isEmpty()) {
+                System.out.println("No full name entered, please try again: ");
+            }
+            else{
+                break;
+            }
+        }
 
-        String fullInfo = nameInput + ", " + emailInput + ", " + phoneNumberInput;
-
-        FileManager customerManager = new FileManager();
-        FileManager.customerFileManager(fullInfo);
+        CustomerManager nameChecker = new CustomerManager();
+        nameChecker.checkCustomer(nameInput);
 
         System.out.println("Enter Room Type (Single/Double/Deluxe/Family/Executive): ");
         String roomType = scanner.nextLine();
