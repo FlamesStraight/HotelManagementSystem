@@ -1,22 +1,12 @@
 public class Customer {
-    private int customerID;
     private String name;
     private String email;
-    private int phoneNumber;
+    private String phoneNumber;
 
-    public Customer(int customerID, String name, String email, int phoneNumber){
-        this.customerID = customerID;
+    public Customer(String name, String email, String phoneNumber){
         this.name = name;
         this.email = email;
         this.phoneNumber = phoneNumber;
-    }
-
-    public int getCustomerID(){
-        return customerID;
-    }
-
-    public void setCustomerID(int customerID){
-        this.customerID = customerID;
     }
 
     public String getName(){
@@ -35,20 +25,20 @@ public class Customer {
         this.email = email;
     }
 
-    public int getPhoneNumber() {
+    public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    public void setPhoneNumber(int phoneNumber){
+    public void setPhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
     }
 
     public String getCustomerInfo(){
-        return "Customer ID: " + customerID + "\nName: " + name + "\nEmail: " + email + "\nPhone: " + phoneNumber;
+        return "Name: " + name + "\nEmail: " + email + "\nPhone: " + phoneNumber;
     }
 
     public String toFileString(){
-        return customerID + "\nName: " + name + "\nEmail: " + email + "\nPhone: " + phoneNumber;
+        return name + ", " + email + ", " + phoneNumber;
     }
 
     public String toString(){
