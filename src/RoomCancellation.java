@@ -1,15 +1,26 @@
+import java.time.LocalDate;
+import java.util.List;
+
 public class RoomCancellation extends Booking {
-    public RoomCancellation(Room room, Customer customer, java.time.LocalDate checkInDate, java.time.LocalDate checkOutDate) {
-        super(room, customer, checkInDate, checkOutDate);
+    public RoomCancellation(String guestName, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
+        super(guestName, roomNumber, checkInDate, checkOutDate);
     }
 
-    @Override
-    public void processBooking() {
-        if (!room.isAvailable()) {
-            room.setAvailable(true);
-            System.out.println("Booking for room " + room.getRoomNumber() + " has been canceled and the room is now available.");
-        } else {
-            System.out.println("Room " + room.getRoomNumber() + " is already available. No booking to cancel.");
+    public boolean cancelBooking(Room room, List<Booking> bookingList){
+        for(Booking booking : bookingList){
+            if (booking.getRoomNumber() == room.getRoomNumber() &&
+                    booking.getCheckInDate().equals(this.getCheckInDate()) &&
+                    booking.getCheckOutDate().equals(this.getCheckOutDate())) {
+
+                bookingList.remove(booking);
+                System.out.println("Your booking was cancelled: " + booking);
+
+                room.setAvailableUntil("9999-99-99");
+                return true;
+            }
         }
+
+        System.out.println("No matching booking found.");
+        return false;
     }
 }
