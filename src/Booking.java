@@ -1,27 +1,20 @@
 import java.time.LocalDate;
 
-public abstract class Booking {
-    protected Room room;
-    protected Customer customer;
-    protected LocalDate checkInDate;
-    protected LocalDate checkOutDate;
+public class Booking {
+    private String guestName;
+    private int roomNumber;
+    private LocalDate checkInDate;
+    private LocalDate checkOutDate;
 
-
-    public Booking(Room room, Customer customer, LocalDate checkInDate, LocalDate checkOutDate) {
-        this.room = room;
-        this.customer = customer;
+    public Booking(String guestName, int roomNumber, LocalDate checkInDate, LocalDate checkOutDate) {
+        this.guestName = guestName;
+        this.roomNumber = roomNumber;
         this.checkInDate = checkInDate;
         this.checkOutDate = checkOutDate;
     }
 
-    public abstract void processBooking();
-
-    public Room getRoom() {
-        return room;
-    }
-
-    public Customer getCustomer() {
-        return customer;
+    public int getRoomNumber() {
+        return roomNumber;
     }
 
     public LocalDate getCheckInDate() {
@@ -30,5 +23,17 @@ public abstract class Booking {
 
     public LocalDate getCheckOutDate() {
         return checkOutDate;
+    }
+
+    public boolean validDateRange(Booking booking) {
+        return (this.checkInDate.isBefore(booking.checkOutDate) && this.checkInDate.isAfter(booking.checkOutDate));
+    }
+
+    public String bookingInfo(){
+        return guestName + ", Room: " + roomNumber + ", From: " + checkInDate + ", To: " + checkOutDate;
+    }
+    @Override
+    public String toString(){
+        return bookingInfo();
     }
 }
