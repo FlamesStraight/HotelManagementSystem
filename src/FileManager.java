@@ -1,40 +1,53 @@
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
+import java.io.*;
 import java.util.HashSet;
+import java.util.Map;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class FileManager {
-    public static void customerFileManager(String fullInfo){
-        HashSet<String> customers = new HashSet<>();
-
-        try {
-            FileInputStream customerFIS = new FileInputStream("customers.txt");
-            Scanner customerScanner = new Scanner(customerFIS);
-
-            while (customerScanner.hasNextLine()) {
-                String line = customerScanner.nextLine().trim();
-                customers.add(line.toLowerCase());
+    public static Map<String, Customer> loadCustomers() {
+        Map<String, Customer> customers = new HashMap<>();
+        try (Scanner scanner = new Scanner(new File("customers.txt"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    String[] customerInfo = line.split(",");
+                    if (customerInfo.length >= 3) {
+                        String fullName = customerInfo[0].trim();
+                        String email = customerInfo[1].trim();
+                        String phoneNumber = customerInfo[2].trim();
+                        customers.put(fullName.toLowerCase(), new Customer(fullName, email, phoneNumber));
+                    } else {
+                        System.out.println("Customer information is incorrect!");
+                    }
+                }
             }
-
-            customerScanner.close();
-            customerFIS.close();
         } catch (IOException e) {
-            System.out.println("No such file or directory.");
+            System.out.println("Error reading from customer file.");
         }
 
-        if (customers.contains(fullInfo.toLowerCase())) {
-            System.out.println("Customer already exists.");
-        } else {
-            try {
-                FileWriter writer = new FileWriter("customers.txt", true); // append = true
-                writer.write(fullInfo + "\n");
-                writer.close();
-                System.out.println("Customer added.");
-            } catch (IOException e) {
-                System.out.println("Error saving customer: " + e.getMessage());
+        return customers;
+    }
+
+    public static void addCustomer(Customer customer){
+        try(FileWriter fw = new FileWriter("customers.txt", true)){
+            fw.write(customer.toFileString() + "\n");
+            System.out.println("\nYour information has been successfully added.\n");
+        }
+        catch(IOException e){
+            System.out.println("Error occurred when saving data!");
+        }
+    }
+
+    public static void updateCustomer(Map<String, Customer> customers){
+        try(PrintWriter pw = new PrintWriter(new FileOutputStream("customers.txt"))){
+            for (Customer customer : customers.values()){
+                pw.println(customer.toFileString());
             }
+            System.out.println("\nYour information has been successfully updated.\n");
+        }
+        catch(IOException e){
+            System.out.println("Error occurred when saving data!");
         }
     }
 
