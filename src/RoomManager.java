@@ -1,46 +1,59 @@
-
-import java.util.ArrayList;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Map;
 
 public class RoomManager {
-    private HashMap<Integer, Room> rooms = new HashMap<>();
+    private Map<String, Map<Integer, Room>> rooms;
 
-    public void addRoom(Room room) {
-        rooms.put(room.getRoomNumber(), room); // Correct: adds to the HashMap called 'rooms.txt'
+    public RoomManager() {
+        rooms = new HashMap<>();
+        initializeRooms();
+    }
+
+    private void initializeRooms() {
+        try (BufferedReader reader = new BufferedReader(new FileReader("rooms.txt"))) {
+            String line;
+
+            while ((line = reader.readLine()) != null) {
+                String[] parts = line.split(", ");
+                if (parts.length == 3) {
+                    int roomNumber = Integer.parseInt(parts[0]);
+                    String roomType = parts[1].trim();
+                    String availableUntil = parts[2].replace("Available until ", "").trim();
+
+                    Room room = new Room(roomNumber, roomType, availableUntil);
+
+                    rooms.computeIfAbsent(roomType, k -> new HashMap<>()).put(roomNumber, room);
+                }
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("Error reading rooms file.");
+        }
     }
 
 
-    public List<Room> getAvailableRooms() {
-        List<Room> availableRooms = new ArrayList<>();
-        for (Room room : rooms.values()) {
-            if (room.isAvailable()) {
-                availableRooms.add(room);
+    public Room roomDetailsChecker(String roomType) {
+        roomType = roomType.trim();
+
+        if(!rooms.containsKey(roomType)) {
+            System.out.println("\nRoom " + roomType + " is not available at this hotel.");
+            return null;
+        }
+
+        Map<Integer, Room> roomList = rooms.get(roomType);
+
+        for(Room room : roomList.values()){
+            if(room.getAvailableUntil().compareTo("9999-99-99") > 0){
+                System.out.println("Room " + room.getRoomNumber() + " is available.");
+                return room;
             }
         }
-        return availableRooms;
-    }
 
-    public List<Room> getAvailableRoomsByType(String type) {
-        List<Room> filteredRooms = new ArrayList<>();
-        for (Room room : rooms.values()) {
-            if (room.isAvailable() && room.getType().equalsIgnoreCase(type)) {
-                filteredRooms.add(room);
-            }
-        }
-        return filteredRooms;
-    }
-
-    public boolean bookRoom(int roomNumber){
-        Room room = rooms.get(roomNumber);
-        if (room != null && room.isAvailable()) {
-            room.setAvailable(false);
-            return true;
-        }
-        return false;
-    }
-
-    public Room getRoom(int roomNumber) {
-        return rooms.get(roomNumber);
+        System.out.println("\nNo room found for type " + roomType);
+        return null;
     }
 }
