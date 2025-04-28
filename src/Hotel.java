@@ -12,18 +12,37 @@ public class Hotel {
             nameInput = scanner.nextLine();
 
             if (nameInput.isEmpty()) {
-                System.out.println("No full name entered, please try again: ");
+                System.out.println("\nNo full name entered, please try again: ");
             }
             else{
                 break;
             }
         }
 
-        CustomerManager nameChecker = new CustomerManager();
-        nameChecker.checkCustomer(nameInput);
+        CustomerManager detailsChecker = new CustomerManager();
+        detailsChecker.checkCustomer(nameInput);
 
-        System.out.println("Enter Room Type (Single/Double/Deluxe/Family/Executive): ");
-        String roomType = scanner.nextLine();
+        String roomType;
+
+        while(true){
+            System.out.println("What room type would you like to book? (Single/Double/Deluxe/Family/Executive): ");
+            roomType = scanner.nextLine();
+
+            if (roomType.isEmpty()) {
+                System.out.println("\nNo room type entered, please try again: ");
+            }
+            else if(roomType.equalsIgnoreCase("Single") || roomType.equalsIgnoreCase("Double")
+                    || roomType.equalsIgnoreCase("Deluxe") || roomType.equalsIgnoreCase("Family")
+                    || roomType.equalsIgnoreCase("Executive")){
+                break;
+            }
+            else{
+                System.out.println("\nInvalid room type, please try again: ");
+            }
+        }
+
+        RoomManager roomChecker = new RoomManager();
+        roomChecker.roomDetailsChecker(roomType);
 
         System.out.println("Enter Room Number to book (e.g., 101): ");
         int roomNumber = Integer.parseInt(scanner.nextLine());
@@ -40,7 +59,7 @@ public class Hotel {
 
         String fullBooking = checkInString + ", " + checkOutString;
 
-        FileManager bookingManager = new FileManager();
-        FileManager.bookingFileManager(nameInput, String.valueOf(roomNumber), checkInString, checkOutString);
+        //FileManager bookingManager = new FileManager();
+        //FileManager.bookingFileManager(nameInput, String.valueOf(roomNumber), checkInString, checkOutString);
     }
 }
