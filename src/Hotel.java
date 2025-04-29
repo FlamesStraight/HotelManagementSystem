@@ -6,7 +6,10 @@ public class Hotel {
         CustomerManager customerManager = new CustomerManager();
         Customer currentCustomer;
 
-        System.out.println("\uD83C\uDFE8 Welcome to the Hotel Booking System!");
+        System.out.println(" ╔══════════════════════════════════════════════╗");
+        System.out.println("║   🏨  Welcome to the Hotel Booking System!     ║");
+        System.out.println(" ╚══════════════════════════════════════════════╝");
+
 
         while (true) {
             System.out.println("\n1) Register  2) Login  3) Exit");
@@ -18,7 +21,10 @@ public class Hotel {
                     System.out.print("\nEnter your full name to register: ");
                     String newName = scanner.nextLine();
                     currentCustomer = customerManager.checkCustomer(newName);
-                    System.out.println("\uD83D\uDC4B Greetings " + currentCustomer.getName() + "!");
+                    System.out.println("╔══════════════════════════════════════════════╗");
+                    System.out.printf ("║   👋 Welcome, %-31s║\n", currentCustomer.getName());
+                    System.out.println("╚══════════════════════════════════════════════╝");
+
 
                     mainMenu(scanner, currentCustomer);
                     break;

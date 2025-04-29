@@ -1,92 +1,67 @@
+import java.io.*;
 import java.util.*;
 
 public class RoomManager {
     private List<Room> rooms;
 
     public RoomManager() {
-        rooms = FileManager.loadRooms();
+        rooms = loadRooms();
     }
 
-    public void roomDetailsChecker(String roomType) {
-        roomType = roomType.trim().toLowerCase();
-
-        switch (roomType.toLowerCase()){
-            case "single":
-                System.out.println("Checking for Single type rooms...");
-                break;
-            case "double":
-                System.out.println("Checking for Double type rooms...");
-                break;
-            case "deluxe":
-                System.out.println("Checking for Deluxe type rooms...");
-                break;
-            case "family":
-                System.out.println("Checking for Family type rooms...");
-                break;
-            case "executive":
-                System.out.println("Checking for Executive type rooms...");
-                break;
-            default:
-                System.out.println("Room type not recognized.");
-                return;
-        }
-
-        List<Room> filteredRooms = new ArrayList<>();
-
-        for (Room room : rooms) {
-            if (room.getRoomType().equalsIgnoreCase(roomType)) {
-                filteredRooms.add(room);
-            }
-        }
-
-        if (filteredRooms.isEmpty()) {
-            System.out.println("No " + roomType + " rooms available.");
-            return;
-        }
-
-        filteredRooms.sort(Comparator.comparingInt(Room::getRoomNumber));
-
-        System.out.println("Available " + roomType + " rooms:");
-        for (Room room : filteredRooms) {
-            System.out.println("Room " + room.getRoomNumber() + " available until " + room.getAvailableUntil());
-        }
-
-    }
-
-    public void bookRoom(String roomType, String customerName, Scanner scanner){
-        roomDetailsChecker(roomType);
-
-        System.out.println("\nEnter the Room Number you want to book from the available rooms:");
-
-        int roomNumber = Integer.parseInt(scanner.nextLine());
-
-        Room selectedRoom = null;
-        for (Room room : rooms) {
-            if (room.getRoomNumber() == roomNumber && room.getRoomType().equalsIgnoreCase(roomType)) {
-                selectedRoom = room;
-                break;
-            }
-        }
-
-        if (selectedRoom != null) {
-            System.out.println("You have selected Room " + selectedRoom.getRoomNumber() + ".");
-
-            System.out.println("Enter Check-In Date (yyyy-mm-dd): ");
-            String checkInString = scanner.nextLine();
-            System.out.println("Enter Check-Out Date (yyyy-mm-dd): ");
-            String checkOutString = scanner.nextLine();
-
-            FileManager.roomFileManager(roomType + ", " + roomNumber);
-            FileManager.saveRoom(customerName, roomNumber);
-
-            System.out.println("Booking for Room " + roomNumber + " has been confirmed!");
-        } else {
-            System.out.println("Invalid room number. Please try again.");
-        }
-
-    }
-
-    public List<Room> getRooms(){
+    public List<Room> getRooms() {
         return rooms;
+    }
+
+    public List<Room> getAvailableRoomsByType(String type) {
+        List<Room> available = new ArrayList<>();
+        for (Room room : rooms) {
+            if (room.getRoomType().equalsIgnoreCase(type)) {
+                available.add(room);
+            }
+        }
+        return available;
+    }
+
+    public void saveRoom(Room room) {
+        try (FileWriter writer = new FileWriter("rooms.txt", true)) {
+            writer.write(room.getRoomNumber() + ", " + room.getRoomType() + ", " + room.getAvailableUntil() + "\n");
+        } catch (IOException e) {
+            System.out.println("Error saving room.");
+        }
+    }
+
+    public void updateRoomAvailability(int roomNumber, String newAvailability) {
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                room.setAvailableUntil(newAvailability);
+                break;
+            }
+        }
+
+        try (PrintWriter writer = new PrintWriter("rooms.txt")) {
+            for (Room r : rooms) {
+                writer.println(r.getRoomNumber() + ", " + r.getRoomType() + ", " + r.getAvailableUntil());
+            }
+        } catch (IOException e) {
+            System.out.println("Error writing to room file.");
+        }
+    }
+
+    private List<Room> loadRooms() {
+        List<Room> roomList = new ArrayList<>();
+        try (Scanner scanner = new Scanner(new File("rooms.txt"))) {
+            while (scanner.hasNextLine()) {
+                String[] parts = scanner.nextLine().split(",");
+                if (parts.length >= 3) {
+                    int number = Integer.parseInt(parts[0].trim());
+                    String type = parts[1].trim();
+                    String available = parts[2].trim();
+                    roomList.add(new Room(number, type, available));
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading rooms.");
+        }
+        return roomList;
     }
 }

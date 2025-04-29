@@ -1,6 +1,6 @@
 1, Executive, Available until 9999-12-31
 2, Executive, Available until 9999-12-31
-3, Executive, Available until 9999-12-31
+3, Executive, Unavailable until 2024-06-28
 4, Executive, Available until 9999-12-31
 5, Executive, Available until 9999-12-31
 6, Family, Available until 9999-12-31
@@ -58,7 +58,7 @@
 58, Double, Available until 9999-12-31
 59, Double, Available until 9999-12-31
 60, Double, Available until 9999-12-31
-61, Double, Available until 9999-12-31
+61, Double, Unavailable until 2024-07-29
 62, Double, Available until 9999-12-31
 63, Double, Available until 9999-12-31
 64, Double, Available until 9999-12-31
@@ -82,7 +82,7 @@
 82, Single, Available until 9999-12-31
 83, Single, Available until 9999-12-31
 84, Single, Available until 9999-12-31
-85, Single, Available until 9999-12-31
+85, Single, Unavailable until 2023-02-17
 86, Single, Available until 9999-12-31
 87, Single, Available until 9999-12-31
 88, Single, Available until 9999-12-31
