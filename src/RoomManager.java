@@ -1,59 +1,92 @@
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class RoomManager {
-    private Map<String, Map<Integer, Room>> rooms;
+    private List<Room> rooms;
 
     public RoomManager() {
-        rooms = new HashMap<>();
-        initializeRooms();
+        rooms = FileManager.loadRooms();
     }
 
-    private void initializeRooms() {
-        try (BufferedReader reader = new BufferedReader(new FileReader("rooms.txt"))) {
-            String line;
+    public void roomDetailsChecker(String roomType) {
+        roomType = roomType.trim().toLowerCase();
 
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(", ");
-                if (parts.length == 3) {
-                    int roomNumber = Integer.parseInt(parts[0]);
-                    String roomType = parts[1].trim();
-                    String availableUntil = parts[2].replace("Available until ", "").trim();
-
-                    Room room = new Room(roomNumber, roomType, availableUntil);
-
-                    rooms.computeIfAbsent(roomType, k -> new HashMap<>()).put(roomNumber, room);
-                }
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-            System.out.println("Error reading rooms file.");
-        }
-    }
-
-
-    public Room roomDetailsChecker(String roomType) {
-        roomType = roomType.trim();
-
-        if(!rooms.containsKey(roomType)) {
-            System.out.println("\nRoom " + roomType + " is not available at this hotel.");
-            return null;
+        switch (roomType.toLowerCase()){
+            case "single":
+                System.out.println("Checking for Single type rooms...");
+                break;
+            case "double":
+                System.out.println("Checking for Double type rooms...");
+                break;
+            case "deluxe":
+                System.out.println("Checking for Deluxe type rooms...");
+                break;
+            case "family":
+                System.out.println("Checking for Family type rooms...");
+                break;
+            case "executive":
+                System.out.println("Checking for Executive type rooms...");
+                break;
+            default:
+                System.out.println("Room type not recognized.");
+                return;
         }
 
-        Map<Integer, Room> roomList = rooms.get(roomType);
+        List<Room> filteredRooms = new ArrayList<>();
 
-        for(Room room : roomList.values()){
-            if(room.getAvailableUntil().compareTo("9999-99-99") > 0){
-                System.out.println("Room " + room.getRoomNumber() + " is available.");
-                return room;
+        for (Room room : rooms) {
+            if (room.getRoomType().equalsIgnoreCase(roomType)) {
+                filteredRooms.add(room);
             }
         }
 
-        System.out.println("\nNo room found for type " + roomType);
-        return null;
+        if (filteredRooms.isEmpty()) {
+            System.out.println("No " + roomType + " rooms available.");
+            return;
+        }
+
+        filteredRooms.sort(Comparator.comparingInt(Room::getRoomNumber));
+
+        System.out.println("Available " + roomType + " rooms:");
+        for (Room room : filteredRooms) {
+            System.out.println("Room " + room.getRoomNumber() + " available until " + room.getAvailableUntil());
+        }
+
+    }
+
+    public void bookRoom(String roomType, String customerName, Scanner scanner){
+        roomDetailsChecker(roomType);
+
+        System.out.println("\nEnter the Room Number you want to book from the available rooms:");
+
+        int roomNumber = Integer.parseInt(scanner.nextLine());
+
+        Room selectedRoom = null;
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber && room.getRoomType().equalsIgnoreCase(roomType)) {
+                selectedRoom = room;
+                break;
+            }
+        }
+
+        if (selectedRoom != null) {
+            System.out.println("You have selected Room " + selectedRoom.getRoomNumber() + ".");
+
+            System.out.println("Enter Check-In Date (yyyy-mm-dd): ");
+            String checkInString = scanner.nextLine();
+            System.out.println("Enter Check-Out Date (yyyy-mm-dd): ");
+            String checkOutString = scanner.nextLine();
+
+            FileManager.roomFileManager(roomType + ", " + roomNumber);
+            FileManager.saveRoom(customerName, roomNumber);
+
+            System.out.println("Booking for Room " + roomNumber + " has been confirmed!");
+        } else {
+            System.out.println("Invalid room number. Please try again.");
+        }
+
+    }
+
+    public List<Room> getRooms(){
+        return rooms;
     }
 }
