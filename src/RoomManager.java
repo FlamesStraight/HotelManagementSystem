@@ -1,46 +1,92 @@
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 
 public class RoomManager {
-    private HashMap<Integer, Room> rooms = new HashMap<>();
+    private List<Room> rooms;
 
-    public void addRoom(Room room) {
-        rooms.put(room.getRoomNumber(), room); // Correct: adds to the HashMap called 'rooms.txt'
+    public RoomManager() {
+        rooms = FileManager.loadRooms();
     }
 
+    public void roomDetailsChecker(String roomType) {
+        roomType = roomType.trim().toLowerCase();
 
-    public List<Room> getAvailableRooms() {
-        List<Room> availableRooms = new ArrayList<>();
-        for (Room room : rooms.values()) {
-            if (room.isAvailable()) {
-                availableRooms.add(room);
-            }
+        switch (roomType.toLowerCase()){
+            case "single":
+                System.out.println("Checking for Single type rooms...");
+                break;
+            case "double":
+                System.out.println("Checking for Double type rooms...");
+                break;
+            case "deluxe":
+                System.out.println("Checking for Deluxe type rooms...");
+                break;
+            case "family":
+                System.out.println("Checking for Family type rooms...");
+                break;
+            case "executive":
+                System.out.println("Checking for Executive type rooms...");
+                break;
+            default:
+                System.out.println("Room type not recognized.");
+                return;
         }
-        return availableRooms;
-    }
 
-    public List<Room> getAvailableRoomsByType(String type) {
         List<Room> filteredRooms = new ArrayList<>();
-        for (Room room : rooms.values()) {
-            if (room.isAvailable() && room.getType().equalsIgnoreCase(type)) {
+
+        for (Room room : rooms) {
+            if (room.getRoomType().equalsIgnoreCase(roomType)) {
                 filteredRooms.add(room);
             }
         }
-        return filteredRooms;
-    }
 
-    public boolean bookRoom(int roomNumber){
-        Room room = rooms.get(roomNumber);
-        if (room != null && room.isAvailable()) {
-            room.setAvailable(false);
-            return true;
+        if (filteredRooms.isEmpty()) {
+            System.out.println("No " + roomType + " rooms available.");
+            return;
         }
-        return false;
+
+        filteredRooms.sort(Comparator.comparingInt(Room::getRoomNumber));
+
+        System.out.println("Available " + roomType + " rooms:");
+        for (Room room : filteredRooms) {
+            System.out.println("Room " + room.getRoomNumber() + " available until " + room.getAvailableUntil());
+        }
+
     }
 
-    public Room getRoom(int roomNumber) {
-        return rooms.get(roomNumber);
+    public void bookRoom(String roomType, String customerName, Scanner scanner){
+        roomDetailsChecker(roomType);
+
+        System.out.println("\nEnter the Room Number you want to book from the available rooms:");
+
+        int roomNumber = Integer.parseInt(scanner.nextLine());
+
+        Room selectedRoom = null;
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber && room.getRoomType().equalsIgnoreCase(roomType)) {
+                selectedRoom = room;
+                break;
+            }
+        }
+
+        if (selectedRoom != null) {
+            System.out.println("You have selected Room " + selectedRoom.getRoomNumber() + ".");
+
+            System.out.println("Enter Check-In Date (yyyy-mm-dd): ");
+            String checkInString = scanner.nextLine();
+            System.out.println("Enter Check-Out Date (yyyy-mm-dd): ");
+            String checkOutString = scanner.nextLine();
+
+            FileManager.roomFileManager(roomType + ", " + roomNumber);
+            FileManager.saveRoom(customerName, roomNumber);
+
+            System.out.println("Booking for Room " + roomNumber + " has been confirmed!");
+        } else {
+            System.out.println("Invalid room number. Please try again.");
+        }
+
+    }
+
+    public List<Room> getRooms(){
+        return rooms;
     }
 }

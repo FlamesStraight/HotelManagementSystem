@@ -41,6 +41,7 @@ public class Customer {
         return name + ", " + email + ", " + phoneNumber;
     }
 
+    @Override
     public String toString(){
         return getCustomerInfo();
     }

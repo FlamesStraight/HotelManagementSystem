@@ -1,40 +1,50 @@
-import java.io.FileInputStream;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class FileManager {
-    public static void customerFileManager(String fullInfo){
-        HashSet<String> customers = new HashSet<>();
-
-        try {
-            FileInputStream customerFIS = new FileInputStream("customers.txt");
-            Scanner customerScanner = new Scanner(customerFIS);
-
-            while (customerScanner.hasNextLine()) {
-                String line = customerScanner.nextLine().trim();
-                customers.add(line.toLowerCase());
+    public static Map<String, Customer> loadCustomers() {
+        Map<String, Customer> customers = new HashMap<>();
+        try (Scanner scanner = new Scanner(new File("customers.txt"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    String[] customerInfo = line.split(",");
+                    if (customerInfo.length >= 3) {
+                        String fullName = customerInfo[0].trim();
+                        String email = customerInfo[1].trim();
+                        String phoneNumber = customerInfo[2].trim();
+                        customers.put(fullName.toLowerCase(), new Customer(fullName, email, phoneNumber));
+                    } else {
+                        System.out.println("Customer information is incorrect!");
+                    }
+                }
             }
-
-            customerScanner.close();
-            customerFIS.close();
         } catch (IOException e) {
-            System.out.println("No such file or directory.");
+            System.out.println("Error reading from customer file.");
         }
 
-        if (customers.contains(fullInfo.toLowerCase())) {
-            System.out.println("Customer already exists.");
-        } else {
-            try {
-                FileWriter writer = new FileWriter("customers.txt", true); // append = true
-                writer.write(fullInfo + "\n");
-                writer.close();
-                System.out.println("Customer added.");
-            } catch (IOException e) {
-                System.out.println("Error saving customer: " + e.getMessage());
+        return customers;
+    }
+
+    public static void addCustomer(Customer customer){
+        try(FileWriter fw = new FileWriter("customers.txt", true)){
+            fw.write(customer.toFileString() + "\n");
+            System.out.println("\nYour information has been successfully added.\n");
+        }
+        catch(IOException e){
+            System.out.println("Error occurred when adding customer data!");
+        }
+    }
+
+    public static void updateCustomer(Map<String, Customer> customers){
+        try(PrintWriter pw = new PrintWriter(new FileOutputStream("customers.txt"))){
+            for (Customer customer : customers.values()){
+                pw.println(customer.toFileString());
             }
+            System.out.println("\nYour information has been successfully updated.\n");
+        }
+        catch(IOException e){
+            System.out.println("Error occurred when saving customer data!");
         }
     }
 
@@ -74,36 +84,86 @@ public class FileManager {
         }
     }
 
-    public static void bookingFileManager(String fullName, String roomNumber, String checkInDate, String checkOutDate) {
-        HashSet<String> bookings = new HashSet<>();
-        String completeBookingInfo = fullName + ", Room " + roomNumber + ", " + checkInDate + " to " + checkOutDate;
+    public static List<Room> loadRooms() {
+        List<Room> rooms = new ArrayList<>();
 
-        try{
-            FileInputStream bookingFIS = new FileInputStream("bookings.txt");
-            Scanner bookingScanner = new Scanner(bookingFIS);
-
-            while (bookingScanner.hasNextLine()) {
-                String line = bookingScanner.nextLine().trim();
-                bookings.add(line.toLowerCase());
+        try (Scanner scanner = new Scanner(new File("rooms.txt"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    String[] roomInfo = line.split(",");
+                    if (roomInfo.length >= 3) {
+                        int roomNumber = Integer.parseInt(roomInfo[0].trim());
+                        String roomType = roomInfo[1].trim();
+                        String availableUntil = roomInfo[2].trim();
+                        rooms.add(new Room(roomNumber, roomType, availableUntil));
+                    } else {
+                        System.out.println("Room information is incorrect!");
+                    }
+                }
             }
+        } catch (IOException e) {
+            System.out.println("Error reading from room file.");
+        }
+        return rooms;
+    }
 
-            bookingScanner.close();
-            bookingFIS.close();
-        } catch(IOException e){
-            System.out.println("No such file or directory.");
+    public static void saveRoom(String roomType, int roomNumber){
+        try (FileWriter fw = new FileWriter("rooms.txt", true)){
+            fw.write(roomType + ", " + roomNumber + "\n");
+        }
+        catch(IOException e){
+            System.out.println("\nError occurred when saving room data!");
+        }
+    }
+
+    public static void saveBooking(String customerName, int roomNumber, String checkInDate, String checkOutDate){
+        try (FileWriter fw = new FileWriter("bookings.txt", true)){
+            fw.write(customerName + ", " + roomNumber + ", " + checkInDate + ", " + checkOutDate + "\n");
+        }
+        catch(IOException e){
+            System.out.println("\nError occurred when saving booking data!");
+        }
+    }
+
+    public static List<String> getBookingsForCustomer(String customerName){
+        List<String> bookings = new ArrayList<>();
+        try(Scanner scanner = new Scanner(new File("bookings.txt"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine();
+                if(line.toLowerCase().contains(customerName.toLowerCase())){
+                    bookings.add(line);
+                }
+            }
+        }
+        catch(IOException e){
+            System.out.println("\nError occurred when reading from bookings file!");
+        }
+        return bookings;
+    }
+
+    public static void updateRoomAvailability(int roomNumber, String availability){
+        List<Room> rooms = loadRooms();
+        boolean updated = false;
+
+        for (Room room : rooms) {
+            if (room.getRoomNumber() == roomNumber) {
+                room.setAvailableUntil(availability);
+                updated = true;
+                break;
+            }
         }
 
-        if (!bookings.contains(completeBookingInfo.toLowerCase())) {
-            try {
-                FileWriter writer = new FileWriter("bookings.txt", true);
-                writer.write(completeBookingInfo + "\n");
-                writer.close();
-                System.out.println("Booking successful.");
+        if (updated) {
+            try (PrintWriter writer = new PrintWriter(new FileWriter("rooms.txt"))) {
+                for (Room room : rooms) {
+                    writer.println(room.getRoomNumber() + ", " + room.getRoomType() + ", " + room.getAvailableUntil());
+                }
             } catch (IOException e) {
-                System.out.println("Error saving booking: " + e.getMessage());
+                System.out.println("Error writing to rooms file: " + e.getMessage());
             }
         } else {
-            System.out.println("Booking already exists.");
+            System.out.println("Room does not exist.");
         }
     }
 }

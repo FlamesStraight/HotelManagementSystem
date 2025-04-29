@@ -1,6 +1,6 @@
-public class HotelManagementSystem {
+public class HotelBookingSystem {
     public static void main(String[] args) {
         Hotel hotel = new Hotel();
-        hotel.run();
+        hotel.startupMenu();
     }
 }
