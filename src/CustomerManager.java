@@ -21,7 +21,7 @@ public class CustomerManager {
                 if(updateAnswer.equalsIgnoreCase("Y")) {
 
                     while (true) {
-                        String emailInput = checkInputValidity("\n Update your email: ", true, false, false);
+                        String emailInput = checkInputValidity("\nUpdate your email: ", true, false, false);
                         if (emailInput.equalsIgnoreCase(customer.getEmail())) {
                             System.out.println("\nError: New email must be different from your current email. Please try again...");
                         }
@@ -32,9 +32,9 @@ public class CustomerManager {
                     }
 
                     while (true) {
-                        String phoneNumberInput = checkInputValidity("\n Update your phone number: ", false, true, false);
+                        String phoneNumberInput = checkInputValidity("\nUpdate your phone number: ", false, true, false);
                         if (phoneNumberInput.equalsIgnoreCase(customer.getPhoneNumber())) {
-                            System.out.println("\n Error: New phone number must be different from your current phone number. Please try again...");
+                            System.out.println("\nError: New phone number must be different from your current phone number. Please try again...");
                         }
                         else {
                             customer.setPhoneNumber(phoneNumberInput);
@@ -69,21 +69,6 @@ public class CustomerManager {
         return customer;
     }
 
-    private String checkNoInput(String userInput){
-        String input;
-        while(true){
-            System.out.print(userInput);
-            input = scanner.nextLine();
-            if(input.isEmpty()){
-                System.out.println("\nNo input provided, please try again...");
-            }
-            else{
-                return input;
-            }
-        }
-    }
-
-
     private String checkInputValidity(String userInput, boolean anEmail, boolean aPhoneNumber, boolean aYesOrNo) {
         String input;
         while(true){
@@ -97,7 +82,7 @@ public class CustomerManager {
                 }
             }
             if(aPhoneNumber){
-                if (input.matches("\\d{7,}")){
+                if (input.matches("\\d{6,}")){
                     return input;
                 }
                 else{
@@ -109,6 +94,20 @@ public class CustomerManager {
                     return input;
                 }
                 System.out.println("\nInvalid input, please enter 'Y' or 'N'...");
+            }
+        }
+    }
+
+    private String checkNoInput(String userInput){
+        String input;
+        while(true){
+            System.out.print(userInput);
+            input = scanner.nextLine();
+            if(input.isEmpty()){
+                System.out.println("\nNo input provided, please try again...");
+            }
+            else{
+                return input;
             }
         }
     }
