@@ -4,6 +4,7 @@ import java.util.*;
 public class CustomerManager {
     private Map<String, Customer> customers;
     private final Scanner scanner = new Scanner(System.in);
+    private static final String CUSTOMER_FILE = "customers.txt";
 
     public CustomerManager() {
         customers = loadCustomers();
@@ -11,7 +12,9 @@ public class CustomerManager {
 
     private Map<String, Customer> loadCustomers() {
         Map<String, Customer> customerMap = new HashMap<>();
-        try (Scanner scanner = new Scanner(new File("customers.txt"))) {
+
+
+        try (Scanner scanner = new Scanner(new File(CUSTOMER_FILE))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine().trim();
                 if (!line.isEmpty()) {
@@ -24,14 +27,15 @@ public class CustomerManager {
                     }
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error loading customers.");
+        } catch (FileNotFoundException e){
+            System.out.println("Customer file not found.");
         }
+
         return customerMap;
     }
 
     public void saveCustomer(Customer customer) {
-        try (FileWriter writer = new FileWriter("customers.txt", true)) {
+        try (FileWriter writer = new FileWriter(CUSTOMER_FILE, true)) {
             writer.write(customer.toFileString() + "\n");
         } catch (IOException e) {
             System.out.println("Error saving customer.");
@@ -39,7 +43,7 @@ public class CustomerManager {
     }
 
     public void updateCustomerFile() {
-        try (PrintWriter pw = new PrintWriter("customers.txt")) {
+        try (PrintWriter pw = new PrintWriter(CUSTOMER_FILE)) {
             for (Customer c : customers.values()) {
                 pw.println(c.toFileString());
             }
@@ -50,6 +54,11 @@ public class CustomerManager {
 
     public Customer checkCustomer(String fullName) {
         Customer customer;
+        while (fullName.isEmpty()) {
+            System.out.print("\nName cannot be empty. Please enter your full name: ");
+            fullName = scanner.nextLine().trim();
+        }
+
         if (customers.containsKey(fullName.toLowerCase())) {
             customer = customers.get(fullName.toLowerCase());
             System.out.println("\nHere's your current information: \n" + customer);
@@ -57,6 +66,7 @@ public class CustomerManager {
             while (true) {
                 String update = checkInputValidity("\nWould you like to update it? (Y/N): ", false, false, true);
                 if (update.equalsIgnoreCase("Y")) {
+
                     while (true) {
                         String email = checkInputValidity("Update your email: ", true, false, false);
                         if (email.equalsIgnoreCase(customer.getEmail())) {
@@ -78,6 +88,7 @@ public class CustomerManager {
                     }
 
                     updateCustomerFile();
+
                     break;
                 } else if (update.equalsIgnoreCase("N")) {
                     break;
@@ -85,10 +96,19 @@ public class CustomerManager {
             }
         } else {
             System.out.println("\nNew customer detected. Please add details.");
+
+            System.out.print("Your name (press Enter to keep \"" + fullName + "\"): ");
+            String confirmedName = scanner.nextLine().trim();
+
+            if (confirmedName.trim().isEmpty()) {
+                confirmedName = fullName;
+            }
+
             String email = checkInputValidity("Enter your email: ", true, false, false);
             String phone = checkInputValidity("Enter your phone number: ", false, true, false);
-            customer = new Customer(fullName, email, phone);
-            customers.put(fullName.toLowerCase(), customer);
+
+            customer = new Customer(confirmedName, email, phone);
+            customers.put(confirmedName.toLowerCase(), customer);
             saveCustomer(customer);
         }
         return customer;
@@ -98,13 +118,17 @@ public class CustomerManager {
         while (true) {
             System.out.print(prompt);
             String input = scanner.nextLine().trim();
-            if (input.isEmpty()) continue;
+
+            if (input.isEmpty()){
+                System.out.println("\nInput cannot be empty. Please try again.");
+                continue;
+            }
 
             if (isEmail && input.contains("@") && input.contains(".")) return input;
             if (isPhone && input.matches("\\d{6,}")) return input;
             if (isYesNo && (input.equalsIgnoreCase("Y") || input.equalsIgnoreCase("N"))) return input;
 
-            System.out.println("Invalid input. Try again.");
+            System.out.println("\nInvalid input. Try again.");
         }
     }
 }
