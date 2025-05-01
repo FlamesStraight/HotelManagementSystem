@@ -27,7 +27,7 @@ public class Room
     }
 
     public String getRoomInfo() {
-        return roomNumber + ", " + roomType + ", Available until: " + availableUntil;
+        return "Room " + roomNumber + ", " + roomType + " Room, " + availableUntil;
     }
 
     @Override
