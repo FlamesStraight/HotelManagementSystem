@@ -1,114 +1,121 @@
-import java.util.Map;
-import java.util.Scanner;
+import java.io.*;
+import java.util.*;
 
 public class CustomerManager {
     private Map<String, Customer> customers;
     private final Scanner scanner = new Scanner(System.in);
 
     public CustomerManager() {
-        customers = FileManager.loadCustomers();
+        customers = loadCustomers();
+    }
+
+    private Map<String, Customer> loadCustomers() {
+        Map<String, Customer> customerMap = new HashMap<>();
+        try (Scanner scanner = new Scanner(new File("customers.txt"))) {
+            while (scanner.hasNextLine()) {
+                String line = scanner.nextLine().trim();
+                if (!line.isEmpty()) {
+                    String[] parts = line.split(",");
+                    if (parts.length >= 3) {
+                        String name = parts[0].trim();
+                        String email = parts[1].trim();
+                        String phone = parts[2].trim();
+                        customerMap.put(name.toLowerCase(), new Customer(name, email, phone));
+                    }
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error loading customers.");
+        }
+        return customerMap;
+    }
+
+    public void saveCustomer(Customer customer) {
+        try (FileWriter writer = new FileWriter("customers.txt", true)) {
+            writer.write(customer.toFileString() + "\n");
+        } catch (IOException e) {
+            System.out.println("Error saving customer.");
+        }
+    }
+
+    public void updateCustomerFile() {
+        try (PrintWriter pw = new PrintWriter("customers.txt")) {
+            for (Customer c : customers.values()) {
+                pw.println(c.toFileString());
+            }
+        } catch (IOException e) {
+            System.out.println("Error updating customer file.");
+        }
     }
 
     public Customer checkCustomer(String fullName) {
         Customer customer;
-
-        if(customers.containsKey(fullName.toLowerCase())) {
+        if (customers.containsKey(fullName.toLowerCase())) {
             customer = customers.get(fullName.toLowerCase());
-            System.out.println("\nHere's your current information: \n" + customer.toString());
+            System.out.println("\nHere's your current information: \n" + customer);
 
-            while(true){
-                String updateAnswer = checkInputValidity("\nWould you like to update it? (Y/N): ",false, false, true);
-                if(updateAnswer.equalsIgnoreCase("Y")) {
+            while (true) {
+                String update = checkInputValidity("\nWould you like to update it? (Y/N): ", false, false, true);
+                if (update.equalsIgnoreCase("Y")) {
 
                     while (true) {
-                        String emailInput = checkInputValidity("\nUpdate your email: ", true, false, false);
-                        if (emailInput.equalsIgnoreCase(customer.getEmail())) {
-                            System.out.println("\nError: New email must be different from your current email. Please try again...");
-                        }
-                        else {
-                            customer.setEmail(emailInput);
+                        String email = checkInputValidity("Update your email: ", true, false, false);
+                        if (email.equalsIgnoreCase(customer.getEmail())) {
+                            System.out.println("Error: New email must be different.");
+                        } else {
+                            customer.setEmail(email);
                             break;
                         }
                     }
 
                     while (true) {
-                        String phoneNumberInput = checkInputValidity("\nUpdate your phone number: ", false, true, false);
-                        if (phoneNumberInput.equalsIgnoreCase(customer.getPhoneNumber())) {
-                            System.out.println("\nError: New phone number must be different from your current phone number. Please try again...");
-                        }
-                        else {
-                            customer.setPhoneNumber(phoneNumberInput);
+                        String phone = checkInputValidity("Update your phone number: ", false, true, false);
+                        if (phone.equalsIgnoreCase(customer.getPhoneNumber())) {
+                            System.out.println("Error: New phone number must be different.");
+                        } else {
+                            customer.setPhoneNumber(phone);
                             break;
                         }
                     }
 
-                    FileManager.updateCustomer(customers);
-                    break;
+                    updateCustomerFile();
 
-                }
-                else if(updateAnswer.equalsIgnoreCase("N")) {
                     break;
-                }
-                else{
-                    System.out.println("No input, please input either 'Y' or 'N'...");
+                } else if (update.equalsIgnoreCase("N")) {
+                    break;
                 }
             }
-        }
+        } else {
+            System.out.println("\nNew customer detected. Please add details.");
 
-        else{
-            System.out.println("\nNew customer detected, please add additional information: ");
+            System.out.print("Your name (press Enter to keep \"" + fullName + "\"): ");
+            String confirmedName = scanner.nextLine().trim();
 
-            String emailInput = checkInputValidity("\nEnter your email: ", true, false, false);
-            String phoneNumberInput = checkInputValidity("\nEnter your phone number: ", false, true, false);
+            if (confirmedName.trim().isEmpty()) {
+                confirmedName = fullName;
+            }
 
-            customer = new Customer(fullName, emailInput, phoneNumberInput);
-            customers.put(fullName.toLowerCase(), customer);
+            String email = checkInputValidity("Enter your email: ", true, false, false);
+            String phone = checkInputValidity("Enter your phone number: ", false, true, false);
 
-            FileManager.addCustomer(customer);
+            customer = new Customer(confirmedName, email, phone);
+            customers.put(confirmedName.toLowerCase(), customer);
+            saveCustomer(customer);
         }
         return customer;
     }
 
-    private String checkInputValidity(String userInput, boolean anEmail, boolean aPhoneNumber, boolean aYesOrNo) {
-        String input;
-        while(true){
-            input = checkNoInput(userInput);
-            if(anEmail){
-                if(input.contains("@") && input.contains(".")){
-                    return input;
-                }
-                else{
-                    System.out.println("\nInvalid email format, please try again...");
-                }
-            }
-            if(aPhoneNumber){
-                if (input.matches("\\d{6,}")){
-                    return input;
-                }
-                else{
-                    System.out.println("\nInvalid phone number format, please try again...");
-                }
-            }
-            if(aYesOrNo){
-                if(input.equalsIgnoreCase("Y") || input.equalsIgnoreCase("N")){
-                    return input;
-                }
-                System.out.println("\nInvalid input, please enter 'Y' or 'N'...");
-            }
-        }
-    }
+    private String checkInputValidity(String prompt, boolean isEmail, boolean isPhone, boolean isYesNo) {
+        while (true) {
+            System.out.print(prompt);
+            String input = scanner.nextLine().trim();
+            if (input.isEmpty()) continue;
 
-    private String checkNoInput(String userInput){
-        String input;
-        while(true){
-            System.out.print(userInput);
-            input = scanner.nextLine();
-            if(input.isEmpty()){
-                System.out.println("\nNo input provided, please try again...");
-            }
-            else{
-                return input;
-            }
+            if (isEmail && input.contains("@") && input.contains(".")) return input;
+            if (isPhone && input.matches("\\d{6,}")) return input;
+            if (isYesNo && (input.equalsIgnoreCase("Y") || input.equalsIgnoreCase("N"))) return input;
+
+            System.out.println("Invalid input. Try again.");
         }
     }
 }

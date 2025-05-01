@@ -2,7 +2,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Scanner;
 
 public class RoomCancellation extends Booking {
@@ -10,25 +9,9 @@ public class RoomCancellation extends Booking {
         super(guestName, roomNumber, checkInDate, checkOutDate);
     }
 
-    public boolean cancelBooking(Room room, List<Booking> bookingList){
-        for(Booking booking : bookingList){
-            if (booking.getRoomNumber() == room.getRoomNumber() &&
-                    booking.getCheckInDate().equals(this.getCheckInDate()) &&
-                    booking.getCheckOutDate().equals(this.getCheckOutDate())) {
+    public static void cancelRoomBooking(Scanner scanner, Customer customer) {
+        RoomManager roomManager = new RoomManager();
 
-                bookingList.remove(booking);
-                System.out.println("Your booking was cancelled: " + booking);
-
-                room.setAvailableUntil("Available until 9999-99-99");
-                return true;
-            }
-        }
-
-        System.out.println("No matching booking found.");
-        return false;
-    }
-
-    public static void cancelRoom(Scanner scanner, Customer customer) {
         System.out.println("\n❌ --- Cancel a Booking ---");
 
         try {
@@ -39,20 +22,24 @@ public class RoomCancellation extends Booking {
             boolean bookingFound = false;
 
             System.out.print("Enter the Room Number you want to cancel: ");
-            String roomToCancel = scanner.nextLine();
+            String roomToCancel = scanner.nextLine().trim();
 
             while (fileScanner.hasNextLine()) {
-                String line = fileScanner.nextLine();
-                if (line.toLowerCase().contains(customer.getName().toLowerCase()) && line.contains("Room " + roomToCancel)) {
-                    bookingFound = true;
+                String line = fileScanner.nextLine().trim();
 
-                    Room dummyRoom = new Room(Integer.parseInt(roomToCancel), "Unknown", "9999-12-31");
-                    RoomCancellation cancellation = new RoomCancellation(customer.getName(), Integer.parseInt(roomToCancel), LocalDate.now(), LocalDate.now());
+
+                if (line.toLowerCase().contains(customer.getName().toLowerCase()) &&
+                        line.contains(", " + roomToCancel + ",")) {
+                    bookingFound = true;
                     System.out.println("\n✅ Booking for Room " + roomToCancel + " canceled.");
+
+                    int roomNumber = Integer.parseInt(roomToCancel);
+                    roomManager.updateRoomAvailability(roomNumber, "Available until 9999-12-31");
                 } else {
                     updatedBookings.append(line).append("\n");
                 }
             }
+
             fileScanner.close();
 
             if (bookingFound) {
@@ -62,9 +49,9 @@ public class RoomCancellation extends Booking {
             } else {
                 System.out.println("❌ No booking found for that room number.");
             }
+
         } catch (IOException e) {
             System.out.println("❌ Error processing booking cancellation: " + e.getMessage());
         }
     }
-
 }
