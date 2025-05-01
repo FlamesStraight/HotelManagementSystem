@@ -7,7 +7,7 @@ public class Hotel {
         Customer currentCustomer;
 
         System.out.println(" ╔══════════════════════════════════════════════╗");
-        System.out.println("║   🏨  Welcome to the Hotel Booking System!     ║");
+        System.out.println("     🏨  Welcome to the Hotel BOOKING System!    ");
         System.out.println(" ╚══════════════════════════════════════════════╝");
 
 
@@ -21,8 +21,8 @@ public class Hotel {
                     System.out.print("\nEnter your full name to register: ");
                     String newName = scanner.nextLine();
                     currentCustomer = customerManager.checkCustomer(newName);
-                    System.out.println("╔══════════════════════════════════════════════╗");
-                    System.out.printf ("║   👋 Welcome, %-31s║\n", currentCustomer.getName());
+                    System.out.println("\n╔══════════════════════════════════════════════╗");
+                    System.out.printf ("    👋 Welcome, %-31s\n", currentCustomer.getName());
                     System.out.println("╚══════════════════════════════════════════════╝");
 
 
@@ -68,11 +68,10 @@ public class Hotel {
                     RoomBooking.viewBookings(customer);
                     break;
                 case "3":
-                    RoomCancellation.cancelRoom(scanner, customer);  // 🆕
+                    RoomCancellation.cancelRoomBooking(scanner, customer);
                     break;
                 case "4":
                     System.out.println("\n✅ Logged out successfully!");
-                    scanner.close();
                     System.exit(0);
                 default:
                     System.out.println("\n❌ Invalid option. Please try again.");
