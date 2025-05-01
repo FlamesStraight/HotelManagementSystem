@@ -8,20 +8,6 @@ public class RoomManager {
         rooms = loadRooms();
     }
 
-    public List<Room> getRooms() {
-        return rooms;
-    }
-
-    public List<Room> getAvailableRoomsByType(String type) {
-        List<Room> available = new ArrayList<>();
-        for (Room room : rooms) {
-            if (room.getRoomType().equalsIgnoreCase(type)) {
-                available.add(room);
-            }
-        }
-        return available;
-    }
-
     public void saveRoom(Room room) {
         try (FileWriter writer = new FileWriter("rooms.txt", true)) {
             writer.write(room.getRoomNumber() + ", " + room.getRoomType() + ", " + room.getAvailableUntil() + "\n");
@@ -64,4 +50,15 @@ public class RoomManager {
         }
         return roomList;
     }
+
+    public List<Room> getRoomsByType(String roomType) {
+        List<Room> filteredRooms = new ArrayList<>();
+        for (Room room : rooms) {
+            if (room.getRoomType().equalsIgnoreCase(roomType)) {
+                filteredRooms.add(room);
+            }
+        }
+        return filteredRooms;
+    }
+
 }
