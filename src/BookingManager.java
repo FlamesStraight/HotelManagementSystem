@@ -18,7 +18,10 @@ public class BookingManager {
         try (Scanner scanner = new Scanner(new File("bookings.txt"))) {
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
-                if (line.toLowerCase().contains(customerName.toLowerCase())) {
+                // Fixed the overlapping users when checking 'View my Bookings' on log-ins with similar letters
+                // Now checks if the line starts exactly with the user's name, followed by a comma
+                // So that it only matches your exact name, not part of someone else's ---- UR A GERD
+                if (line.toLowerCase().startsWith(customerName.toLowerCase() + ",")) {
                     bookings.add(line);
                 }
             }

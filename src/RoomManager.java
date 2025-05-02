@@ -50,4 +50,18 @@ public class RoomManager {
         }
         return roomList;
     }
+
+    // This new method allows to check for all available rooms when booking a specific room type
+    public List<Room> getAvailableRoomsByType(String roomType) {
+        List<Room> available = new ArrayList<>();
+        for (Room room : rooms) {
+            if (room.getRoomType().equalsIgnoreCase(roomType)
+                    && room.getAvailableUntil().toLowerCase().contains("available")) {
+                available.add(room);
+            }
+        }
+        return available;
+    }
 }
+
+

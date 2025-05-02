@@ -15,7 +15,10 @@ public class RoomBooking extends Booking {
         System.out.println("\n🏨 --- Book a Room ---");
 
         String roomType;
-        while(true) {
+        List<Room> availableRooms;
+
+
+        while (true) {
             System.out.print("Enter Room Type (Single/Double/Deluxe/Family/Executive): ");
             roomType = scanner.nextLine().trim();
 
@@ -25,18 +28,37 @@ public class RoomBooking extends Booking {
             }
 
             String lowerType = roomType.toLowerCase();
-            if (lowerType.equals("single") || lowerType.equals("double") || lowerType.equals("deluxe")
-                    || lowerType.equals("family") || lowerType.equals("executive")) {
-                break;
-            } else {
+            if (!lowerType.equals("single") && !lowerType.equals("double") &&
+                    !lowerType.equals("deluxe") && !lowerType.equals("family") &&
+                    !lowerType.equals("executive")) {
                 System.out.println("\nInvalid room type. Please enter one of the listed room types!");
+                continue;
             }
 
+
+            availableRooms = roomManager.getAvailableRoomsByType(roomType);
+
+            if (availableRooms.isEmpty()) {
+                System.out.println("\n❌ No available rooms found for this type.");
+                System.out.print("Would you like to choose another room type? (Y/N): ");
+                String tryAgain = scanner.nextLine().trim();
+                if (tryAgain.equalsIgnoreCase("Y")) {
+                    continue;
+                } else {
+                    return;
+                }
+            }
+
+            System.out.println("\nAvailable " + roomType.toLowerCase() + " Rooms:");
+            for (Room room : availableRooms) {
+                System.out.println(" - Room " + room.getRoomNumber() + " (" + room.getAvailableUntil() + ")");
+            }
+            break;
         }
 
         int roomNumber;
-        while(true){
-            System.out.print("Enter Room Number: (NEED TO ADD AVAILABLE ROOM NUMBERS FOR ROOM TYPE INPUTTED, IGNORE THIS FOR NOW PLS TY)");
+        while (true) {
+            System.out.print("Enter Room Number from the list above: ");
             String roomInput = scanner.nextLine().trim();
 
             if (roomInput.isEmpty()) {
@@ -47,51 +69,45 @@ public class RoomBooking extends Booking {
             try {
                 roomNumber = Integer.parseInt(roomInput);
 
-                boolean isValid = switch (roomType.toLowerCase()) {
-                    case "executive" -> roomNumber >= 1 && roomNumber <= 5;
-                    case "family" -> roomNumber >= 6 && roomNumber <= 10;
-                    case "deluxe" -> roomNumber >= 11 && roomNumber <= 15;
-                    case "double" -> roomNumber >= 16 && roomNumber <= 20;
-                    case "single" -> roomNumber >= 21 && roomNumber <= 25;
-                    default -> false;
-                };
+                boolean found = false;
+                for (Room room : availableRooms) {
+                    if (room.getRoomNumber() == roomNumber) {
+                        found = true;
+                        break;
+                    }
+                }
 
-                if (isValid) break;
-                else System.out.println("\nRoom number is not valid for the selected room type.");
-
+                if (found) break;
+                else System.out.println("\nRoom number is not in the available list. Try again.");
             } catch (NumberFormatException e) {
                 System.out.println("\nPlease enter a valid number.");
             }
         }
 
         String checkInTime;
-        while(true){
+        while (true) {
             System.out.print("Enter Check-In Date (yyyy-mm-dd): ");
             checkInTime = scanner.nextLine().trim();
             if (!checkInTime.isEmpty()) break;
             System.out.println("\nCheck-in date cannot be empty.");
-
         }
 
         String checkOutTime;
-        while(true){
-            System.out.print("Enter Check-In Date (yyyy-mm-dd): ");
+        while (true) {
+            System.out.print("Enter Check-Out Date (yyyy-mm-dd): ");
             checkOutTime = scanner.nextLine().trim();
             if (!checkOutTime.isEmpty()) break;
-            System.out.println("\nCheck-in date cannot be empty.");
-
+            System.out.println("\nCheck-out date cannot be empty.");
         }
 
         bookingManager.saveBooking(customer.getName(), roomNumber, checkInTime, checkOutTime);
 
         Room newRoom = new Room(roomNumber, roomType, "Unavailable until " + checkOutTime);
         roomManager.saveRoom(newRoom);
-
         roomManager.updateRoomAvailability(roomNumber, "Unavailable until " + checkOutTime);
 
         System.out.println("\n✅ Booking complete for Room " + roomNumber + ".");
     }
-
 
     public static void viewBookings(Customer customer) {
         System.out.println("\n📖 --- Your Bookings ---");
@@ -108,3 +124,6 @@ public class RoomBooking extends Booking {
         }
     }
 }
+
+
+// I have also changed ur RoomBooking class to make it so that it checks the availability on rooms based on the user's room type input (shows both unavailable and available)
