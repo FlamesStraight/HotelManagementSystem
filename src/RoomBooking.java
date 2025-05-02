@@ -127,3 +127,4 @@ public class RoomBooking extends Booking {
 
 
 // I have also changed ur RoomBooking class to make it so that it checks the availability on rooms based on the user's room type input (shows both unavailable and available)
+// if thats ok, ur changes are still on master if u want to revert and also maybe use the new code as reference to make the room availability filter
