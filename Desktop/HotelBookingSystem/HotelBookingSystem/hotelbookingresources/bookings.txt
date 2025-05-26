@@ -1,0 +1,19 @@
+John Doe booked in Room 12, from 2025-01-04 to 2025-01-07.
+Jane Doe booked in Room 15, from 2025-05-12 to 2025-05-17.
+Jane Doe booked in Room 10, from 2025-06-07 to 2025-06-14.
+Al Tristan Legaspi booked in Room 1, from 2025-08-22 to 2025-08-25.
+Al Tristan Legaspi booked in Room 6, from 2025-07-09 to 2025-07-10.
+Elms Hayworth booked in Room 3, from 2025-05-08 to 2025-05-13.
+Elms Hayworth booked in Room 8, from 2025-05-19 to 2025-05-25.
+Ali Wong booked in Room 4, from 2025-07-09 to 2025-07-10.
+Jane Doe booked in Room 7, from 2026-12-01 to 2026-12-05.
+Gary Jamie Zane booked in Room 24, from 2025-08-08 to 2025-08-22.
+Gary Jamie Zane booked in Room 4, from 2025-07-11 to 2025-07-15.
+Kyle Elmo Malimban booked in Room 18, from 2027-07-12 to 2027-07-15.
+Kyle Elmo Malimban booked in Room 6, from 2025-08-11 to 2025-08-13.
+Gabe Lotus booked in Room 22, from 2025-05-05 to 2025-05-08.
+Elise the 4th booked in Room 17, from 2025-05-08 to 2025-05-12.
+Elise the 4th booked in Room 20, from 2025-12-12 to 2025-12-14.
+Jane Doe booked in Room 24, from 2025-08-25 to 2025-08-28.
+Al Tristan Legaspi booked in Room 13, from 2025-05-19 to 2025-05-27.
+Kyle Elmo booked in Room 21, from 2025-08-23 to 2025-08-28.

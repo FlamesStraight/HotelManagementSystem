@@ -1,0 +1,25 @@
+1, Executive, Unavailable until 2025-08-25
+2, Executive, Available
+3, Executive, Unavailable until 2025-05-13
+4, Executive, Unavailable until 2025-07-15
+5, Executive, Available
+6, Family, Unavailable until 2025-08-13
+7, Family, Unavailable until 2026-12-05
+8, Family, Unavailable until 2025-05-25
+9, Family, Available
+10, Family, Unavailable until 2025-06-14
+11, Deluxe, Available
+12, Deluxe, Available
+13, Deluxe, Unavailable until 2025-05-27
+14, Deluxe, Available
+15, Deluxe, Unavailable until 2025-05-17
+16, Double, Available
+17, Double, Unavailable until 2025-05-12
+18, Double, Unavailable until 2027-07-15
+19, Double, Available
+20, Double, Unavailable until 2025-12-14
+21, Single, Unavailable until 2025-08-28
+22, Single, Unavailable until 2025-05-08
+23, Single, Available
+24, Single, Unavailable until 2025-08-28
+25, Single, Available
