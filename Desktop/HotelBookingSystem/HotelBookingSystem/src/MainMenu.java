@@ -7,16 +7,80 @@
  *
  * @author Administrator
  */
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.table.DefaultTableModel;
+import database.HotelDBManager;
+import Project2.CustomerManager;
+import Project2.Customers;
+
+
+
 public class MainMenu extends javax.swing.JFrame {
+    
+    private String fullName; // 💡 Stores the current user's name
+    
+    
 
     /**
      * Creates new form MainMenu
      */
-    public MainMenu(String txtFullName) {
-    initComponents();
-    setSize(800, 500); // or whatever size you want
-    setLocationRelativeTo(null); // center it
-    greetingLabel.setText("Greetings, " + txtFullName);
+     public MainMenu(String fullName) {
+       this.fullName = fullName;
+       initComponents();
+       greetingLabel.setText("Greetings, " + fullName);
+
+       // Load personal info
+        CustomerManager cm = new CustomerManager();
+        Customers customer = cm.getCustomerByFullName(fullName);
+        if (customer != null) {
+            DefaultTableModel personalModel = (DefaultTableModel) personalInfo.getModel();
+            personalModel.setRowCount(0);
+            personalModel.addRow(new Object[] {
+                customer.getFullName(),
+                customer.getEmail(),
+                customer.getPhoneNumber()
+            });
+        }
+
+        // Load bookings
+        try {
+            Connection conn = new HotelDBManager().getConnection();
+            String sql = "SELECT ROOMNO, ROOMTYPE, CHECKINDATE, CHECKOUTDATE " +
+                         "FROM HOTELBOOKINGMANAGEMENTDB WHERE FULL_NAME = ?";
+            PreparedStatement stmt = conn.prepareStatement(sql);
+            stmt.setString(1, fullName);
+            ResultSet rs = stmt.executeQuery();
+
+            DefaultTableModel bookingModel = (DefaultTableModel) viewBookings.getModel();
+            bookingModel.setRowCount(0);
+
+            while (rs.next()) {
+                int roomNo = rs.getInt("ROOMNO");
+                String roomType = rs.getString("ROOMTYPE");
+                String checkIn = rs.getString("CHECKINDATE");
+                String checkOut = rs.getString("CHECKOUTDATE");
+
+                bookingModel.addRow(new Object[] {
+                    fullName, roomNo, roomType, checkIn, checkOut
+                });
+            }
+
+            rs.close();
+            stmt.close();
+            conn.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Default constructor (optional, fallback if needed)
+    public MainMenu() {
+        initComponents();
+        greetingLabel.setText("Greetings, Guest");
     }
 
     
@@ -32,23 +96,62 @@ public class MainMenu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel2 = new javax.swing.JPanel();
+        Logout = new javax.swing.JButton();
+        CancelBooking = new javax.swing.JButton();
+        BookRoom = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         greetingLabel = new javax.swing.JLabel();
         UpdateFullName = new javax.swing.JButton();
-        Logout = new javax.swing.JButton();
-        BookRoom = new javax.swing.JButton();
-        CancelBooking = new javax.swing.JButton();
+        jTabbedPane1 = new javax.swing.JTabbedPane();
+        jPanel4 = new javax.swing.JPanel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        viewBookings = new javax.swing.JTable();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        personalInfo = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setBackground(new java.awt.Color(0, 0, 0));
 
-        jPanel1.setBackground(new java.awt.Color(0, 0, 0));
+        jPanel2.setBackground(new java.awt.Color(0, 51, 102));
+        jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        greetingLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Logout.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        Logout.setText("Log Out");
+        Logout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                LogoutActionPerformed(evt);
+            }
+        });
+        jPanel2.add(Logout, new org.netbeans.lib.awtextra.AbsoluteConstraints(646, 104, 217, 187));
+
+        CancelBooking.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        CancelBooking.setText("<html><center>Cancel<br>Booking</center></html>\n");
+        CancelBooking.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                CancelBookingActionPerformed(evt);
+            }
+        });
+        jPanel2.add(CancelBooking, new org.netbeans.lib.awtextra.AbsoluteConstraints(353, 107, 217, 187));
+
+        BookRoom.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
+        BookRoom.setText("<html><center>Book<br>a Room</center></html>\n\n");
+        BookRoom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BookRoomActionPerformed(evt);
+            }
+        });
+        jPanel2.add(BookRoom, new org.netbeans.lib.awtextra.AbsoluteConstraints(53, 107, 217, 187));
+
+        jPanel1.setBackground(new java.awt.Color(0, 102, 153));
+
+        greetingLabel.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
         greetingLabel.setForeground(new java.awt.Color(255, 255, 255));
         greetingLabel.setText("Greetings,  ");
 
-        UpdateFullName.setBackground(new java.awt.Color(0, 0, 0));
+        UpdateFullName.setBackground(new java.awt.Color(0, 51, 102));
         UpdateFullName.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
         UpdateFullName.setForeground(new java.awt.Color(255, 255, 255));
         UpdateFullName.setText("Update Your Information");
@@ -64,76 +167,128 @@ public class MainMenu extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(62, 62, 62)
-                .addComponent(greetingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 271, Short.MAX_VALUE)
-                .addComponent(UpdateFullName)
-                .addGap(19, 19, 19))
+                .addGap(33, 33, 33)
+                .addComponent(greetingLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 381, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 221, Short.MAX_VALUE)
+                .addComponent(UpdateFullName, javax.swing.GroupLayout.PREFERRED_SIZE, 259, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(16, 16, 16))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(7, 7, 7)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(greetingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 38, Short.MAX_VALUE)
-                    .addComponent(UpdateFullName))
+                    .addComponent(greetingLabel, javax.swing.GroupLayout.DEFAULT_SIZE, 35, Short.MAX_VALUE)
+                    .addComponent(UpdateFullName, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
-        Logout.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        Logout.setText("Log Out");
-        Logout.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                LogoutActionPerformed(evt);
-            }
-        });
+        jPanel2.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(1, 1, 910, 60));
 
-        BookRoom.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        BookRoom.setText("<html><center>Book<br>a Room</center></html>\n\n");
-        BookRoom.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                BookRoomActionPerformed(evt);
-            }
-        });
+        jTabbedPane1.setBackground(new java.awt.Color(0, 102, 153));
+        jTabbedPane1.setForeground(new java.awt.Color(255, 255, 255));
+        jTabbedPane1.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
 
-        CancelBooking.setFont(new java.awt.Font("Segoe UI", 0, 48)); // NOI18N
-        CancelBooking.setText("<html><center>Cancel<br>Booking</center></html>\n");
-        CancelBooking.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                CancelBookingActionPerformed(evt);
-            }
-        });
+        jPanel4.setBackground(new java.awt.Color(0, 102, 153));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(BookRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(74, 74, 74)
-                .addComponent(CancelBooking, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(57, 57, 57)
-                .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 217, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(85, 85, 85))
+        viewBookings.setBackground(new java.awt.Color(0, 102, 153));
+        viewBookings.setFont(new java.awt.Font("Segoe UI Black", 0, 14)); // NOI18N
+        viewBookings.setForeground(new java.awt.Color(255, 255, 255));
+        viewBookings.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null},
+                {null, null, null, null, null}
+            },
+            new String [] {
+                "Full Name", "Room Number", "Room Type", "Check In", "Check Out"
+            }
+        ));
+        viewBookings.setGridColor(new java.awt.Color(0, 102, 153));
+        viewBookings.setSelectionBackground(new java.awt.Color(0, 102, 153));
+        viewBookings.setSelectionForeground(new java.awt.Color(0, 102, 153));
+        jScrollPane1.setViewportView(viewBookings);
+
+        javax.swing.GroupLayout jPanel4Layout = new javax.swing.GroupLayout(jPanel4);
+        jPanel4.setLayout(jPanel4Layout);
+        jPanel4Layout.setHorizontalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 910, Short.MAX_VALUE)
         );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(40, 40, 40)
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(109, 109, 109)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(BookRoom, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(CancelBooking, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(108, 108, 108)
-                        .addComponent(Logout, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(275, Short.MAX_VALUE))
+        jPanel4Layout.setVerticalGroup(
+            jPanel4Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
         );
+
+        jTabbedPane1.addTab("View Your Bookings", jPanel4);
+
+        jPanel3.setBackground(new java.awt.Color(0, 102, 153));
+
+        personalInfo.setBackground(new java.awt.Color(0, 102, 153));
+        personalInfo.setFont(new java.awt.Font("Segoe UI Black", 0, 12)); // NOI18N
+        personalInfo.setForeground(new java.awt.Color(255, 255, 255));
+        personalInfo.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "Full Name", "Email", "Phone Number"
+            }
+        ));
+        jScrollPane2.setViewportView(personalInfo);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 910, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 345, Short.MAX_VALUE)
+        );
+
+        jTabbedPane1.addTab("Personal Information", jPanel3);
+
+        jPanel2.add(jTabbedPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 390, 910, 380));
+
+        getContentPane().add(jPanel2, java.awt.BorderLayout.CENTER);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -155,7 +310,7 @@ public class MainMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_CancelBookingActionPerformed
 
     private void BookRoomActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BookRoomActionPerformed
-        BookARoom bookRoomWindow = new BookARoom();
+        BookARoom bookRoomWindow = new BookARoom(fullName); // ✅ Pass the user's name
         bookRoomWindow.setVisible(true);
         bookRoomWindow.setLocationRelativeTo(null); // Center it
         this.dispose(); // Close current window
@@ -188,5 +343,13 @@ public class MainMenu extends javax.swing.JFrame {
     private javax.swing.JButton UpdateFullName;
     private javax.swing.JLabel greetingLabel;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTabbedPane jTabbedPane1;
+    private javax.swing.JTable personalInfo;
+    private javax.swing.JTable viewBookings;
     // End of variables declaration//GEN-END:variables
 }
