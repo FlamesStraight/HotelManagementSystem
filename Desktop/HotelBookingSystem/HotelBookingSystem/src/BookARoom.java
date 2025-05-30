@@ -7,13 +7,42 @@
  *
  * @author Administrator
  */
+import java.time.LocalDate;
+import java.sql.Date;
+import javax.swing.JOptionPane;
+import Project2.BookingManager; // adjust if needed
+
 public class BookARoom extends javax.swing.JFrame {
+    
+    private void showBookingForm() {
+    bookingPanel.setVisible(true);
+
+    Book.setVisible(false);
+    Book.setEnabled(false);
+
+    Book2.setVisible(false);
+    Book2.setEnabled(false);
+
+    Book3.setVisible(false);
+    Book3.setEnabled(false);
+
+    Book4.setVisible(false);
+    Book4.setEnabled(false);
+
+    Book5.setVisible(false);
+    Book5.setEnabled(false);
+}
+
 
     /**
      * Creates new form BookARoom
      */
     public BookARoom() {
         initComponents();
+        
+        
+        bookingPanel.setVisible(false);
+
     }
 
     /**
@@ -25,32 +54,381 @@ public class BookARoom extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel3 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
+        MainMenu = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        bookingPanel = new javax.swing.JPanel();
+        XButton = new javax.swing.JButton();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel8 = new javax.swing.JLabel();
+        jSeparator1 = new javax.swing.JSeparator();
+        jLabel10 = new javax.swing.JLabel();
+        CheckOutDate = new com.github.lgooddatepicker.components.DatePicker();
+        CheckInDate = new com.github.lgooddatepicker.components.DatePicker();
+        jLabel11 = new javax.swing.JLabel();
+        RoomNumber = new javax.swing.JComboBox<>();
+        jLabel12 = new javax.swing.JLabel();
+        PhoneNumberField = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        FullNameField = new javax.swing.JTextField();
+        EmailField = new javax.swing.JTextField();
+        SubmitButton = new javax.swing.JButton();
+        jLabel15 = new javax.swing.JLabel();
+        RoomType = new javax.swing.JComboBox<>();
+        Book2 = new javax.swing.JButton();
+        Book3 = new javax.swing.JButton();
+        jLabel4 = new javax.swing.JLabel();
+        Book = new javax.swing.JButton();
+        Book4 = new javax.swing.JButton();
+        jLabel3 = new javax.swing.JLabel();
+        Book5 = new javax.swing.JButton();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGap(0, 100, Short.MAX_VALUE)
+        );
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        jPanel2.setBackground(new java.awt.Color(0, 102, 153));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel1.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setText("Book a Room!");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(26, 12, 290, 52));
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
-        getContentPane().setLayout(layout);
-        layout.setHorizontalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(15, 15, 15)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(863, Short.MAX_VALUE))
-        );
-        layout.setVerticalGroup(
-            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addGap(19, 19, 19)
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(438, Short.MAX_VALUE))
-        );
+        MainMenu.setBackground(new java.awt.Color(0, 51, 102));
+        MainMenu.setFont(new java.awt.Font("Segoe UI Black", 0, 24)); // NOI18N
+        MainMenu.setForeground(new java.awt.Color(255, 255, 255));
+        MainMenu.setText("Main Menu");
+        MainMenu.setBorder(null);
+        MainMenu.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                MainMenuActionPerformed(evt);
+            }
+        });
+        jPanel2.add(MainMenu, new org.netbeans.lib.awtextra.AbsoluteConstraints(887, 10, 190, 50));
+
+        getContentPane().add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 70));
+
+        jPanel1.setBackground(new java.awt.Color(0, 51, 102));
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        bookingPanel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        XButton.setText("X");
+        XButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                XButtonActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(XButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(740, 20, -1, -1));
+
+        jLabel9.setText("Reservation Form");
+        jLabel9.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        bookingPanel.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 20, 320, 30));
+
+        jLabel8.setText("Room Number");
+        jLabel8.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 450, 170, 20));
+
+        jSeparator1.setBackground(new java.awt.Color(102, 102, 102));
+        bookingPanel.add(jSeparator1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 60, 790, -1));
+
+        jLabel10.setText("Phone Number");
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 210, 120, 20));
+        bookingPanel.add(CheckOutDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 320, 460, 40));
+        bookingPanel.add(CheckInDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 260, 460, 40));
+
+        jLabel11.setText("Check Out");
+        jLabel11.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 330, 70, 20));
+
+        RoomNumber.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25" }));
+        RoomNumber.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RoomNumberActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(RoomNumber, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 440, 460, 40));
+
+        jLabel12.setText("Check In");
+        jLabel12.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 270, 70, 20));
+
+        PhoneNumberField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PhoneNumberFieldActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(PhoneNumberField, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 200, 460, 40));
+
+        jLabel13.setText("Full Name");
+        jLabel13.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 90, 70, 20));
+
+        jLabel14.setText("Email");
+        jLabel14.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 150, 70, 20));
+
+        FullNameField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                FullNameFieldActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(FullNameField, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 80, 460, 40));
+
+        EmailField.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                EmailFieldActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(EmailField, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 140, 460, 40));
+
+        SubmitButton.setText("Submit");
+        SubmitButton.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        SubmitButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                SubmitButtonActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(SubmitButton, new org.netbeans.lib.awtextra.AbsoluteConstraints(670, 500, 100, 30));
+
+        jLabel15.setText("Room Type");
+        jLabel15.setFont(new java.awt.Font("Segoe UI", 0, 14)); // NOI18N
+        bookingPanel.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 390, 70, 20));
+
+        RoomType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Single", "Double", "Family", "Deluxe", "Executive", " " }));
+        RoomType.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                RoomTypeActionPerformed(evt);
+            }
+        });
+        bookingPanel.add(RoomType, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 380, 460, 40));
+
+        jPanel1.add(bookingPanel, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 140, 790, 550));
+
+        Book2.setText("Book");
+        Book2.setBackground(new java.awt.Color(0, 102, 153));
+        Book2.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Book2.setForeground(new java.awt.Color(255, 255, 255));
+        Book2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Book2ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Book2, new org.netbeans.lib.awtextra.AbsoluteConstraints(515, 384, -1, -1));
+
+        Book3.setText("Book");
+        Book3.setBackground(new java.awt.Color(0, 102, 153));
+        Book3.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Book3.setForeground(new java.awt.Color(255, 255, 255));
+        Book3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Book3ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Book3, new org.netbeans.lib.awtextra.AbsoluteConstraints(869, 384, -1, -1));
+
+        jLabel4.setIcon(new javax.swing.ImageIcon("C:\\Users\\Administrator\\Downloads\\sng_600_001.jpg")); // NOI18N
+        jLabel4.setText("jLabel2");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(73, 137, 269, 241));
+
+        Book.setText("Book");
+        Book.setBackground(new java.awt.Color(0, 102, 153));
+        Book.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Book.setForeground(new java.awt.Color(255, 255, 255));
+        Book.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                BookActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Book, new org.netbeans.lib.awtextra.AbsoluteConstraints(169, 384, -1, -1));
+
+        Book4.setBackground(new java.awt.Color(0, 102, 153));
+        Book4.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Book4.setForeground(new java.awt.Color(255, 255, 255));
+        Book4.setText("Book");
+        Book4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Book4ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Book4, new org.netbeans.lib.awtextra.AbsoluteConstraints(345, 719, -1, -1));
+
+        jLabel3.setIcon(new javax.swing.ImageIcon("C:\\Users\\Administrator\\Downloads\\sng_600_001.jpg")); // NOI18N
+        jLabel3.setText("jLabel2");
+        jPanel1.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(414, 137, 269, 241));
+
+        Book5.setBackground(new java.awt.Color(0, 102, 153));
+        Book5.setFont(new java.awt.Font("Segoe UI Black", 0, 18)); // NOI18N
+        Book5.setForeground(new java.awt.Color(255, 255, 255));
+        Book5.setText("Book");
+        Book5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Book5ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(Book5, new org.netbeans.lib.awtextra.AbsoluteConstraints(694, 719, -1, -1));
+
+        jLabel6.setIcon(new javax.swing.ImageIcon("C:\\Users\\Administrator\\Downloads\\sng_600_001.jpg")); // NOI18N
+        jLabel6.setText("jLabel2");
+        jPanel1.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(762, 137, 269, 241));
+
+        jLabel5.setIcon(new javax.swing.ImageIcon("C:\\Users\\Administrator\\Downloads\\sng_600_001.jpg")); // NOI18N
+        jLabel5.setText("jLabel2");
+        jPanel1.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(588, 472, 269, 241));
+
+        jLabel7.setIcon(new javax.swing.ImageIcon("C:\\Users\\Administrator\\Downloads\\sng_600_001.jpg")); // NOI18N
+        jLabel7.setText("jLabel2");
+        jPanel1.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(251, 474, 269, 241));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1100, 790));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void MainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MainMenuActionPerformed
+        MainMenu MainMenuWindow = new MainMenu("Guest");
+        MainMenuWindow.setVisible(true);
+        MainMenuWindow.setLocationRelativeTo(null); // Center the window
+        this.dispose(); // Close the current BookARoom window
+
+    }//GEN-LAST:event_MainMenuActionPerformed
+
+    private void BookActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BookActionPerformed
+        showBookingForm();
+    }//GEN-LAST:event_BookActionPerformed
+
+    private void XButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_XButtonActionPerformed
+        bookingPanel.setVisible(false);
+
+        Book.setVisible(true);
+        Book.setEnabled(true);
+
+        Book2.setVisible(true);
+        Book2.setEnabled(true);
+
+        Book3.setVisible(true);
+        Book3.setEnabled(true);
+
+        Book4.setVisible(true);
+        Book4.setEnabled(true);
+
+        Book5.setVisible(true);
+        Book5.setEnabled(true);
+    }//GEN-LAST:event_XButtonActionPerformed
+
+    private void Book2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Book2ActionPerformed
+        showBookingForm();
+    }//GEN-LAST:event_Book2ActionPerformed
+
+    private void Book3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Book3ActionPerformed
+        showBookingForm();
+    }//GEN-LAST:event_Book3ActionPerformed
+
+    private void Book4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Book4ActionPerformed
+        showBookingForm();
+    }//GEN-LAST:event_Book4ActionPerformed
+
+    private void Book5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Book5ActionPerformed
+        showBookingForm();
+    }//GEN-LAST:event_Book5ActionPerformed
+
+    private void FullNameFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_FullNameFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_FullNameFieldActionPerformed
+
+    private void EmailFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_EmailFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_EmailFieldActionPerformed
+
+    private void PhoneNumberFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PhoneNumberFieldActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_PhoneNumberFieldActionPerformed
+
+    private void RoomTypeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomTypeActionPerformed
+        String selectedType = RoomType.getSelectedItem().toString();
+        BookingManager bm = new BookingManager();
+
+        RoomNumber.removeAllItems();
+        for (int room : bm.getAvailableRoomNumbersByType(selectedType)) {
+            RoomNumber.addItem(String.valueOf(room));
+        }
+    }//GEN-LAST:event_RoomTypeActionPerformed
+
+    private void RoomNumberActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_RoomNumberActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_RoomNumberActionPerformed
+
+    private void SubmitButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_SubmitButtonActionPerformed
+        
+        try {
+            String fullName = FullNameField.getText().trim();
+            String email = EmailField.getText().trim();
+            String phone = PhoneNumberField.getText().trim();
+
+            // ✅ Validation logic
+            if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+                JOptionPane.showMessageDialog(this, "All fields must be filled.");
+                return;
+            }
+
+            // ✅ Phone must be 10 digits (numbers only)
+            if (!phone.matches("\\d{10}")) {
+                JOptionPane.showMessageDialog(this, "Phone number must be 10 digits.");
+                return;
+            }
+
+            // ✅ Email must contain '@' and end with '.com'
+            if (!email.contains("@") || !email.endsWith(".com")) {
+                JOptionPane.showMessageDialog(this, "Please enter a valid email address.");
+                return;
+            }
+
+            // Proceed with parsing other values
+            String roomType = RoomType.getSelectedItem().toString();
+            int roomNo = Integer.parseInt(RoomNumber.getSelectedItem().toString());
+
+            LocalDate checkInLocal = CheckInDate.getDate();
+            LocalDate checkOutLocal = CheckOutDate.getDate();
+            java.sql.Date checkInDate = java.sql.Date.valueOf(checkInLocal);
+            java.sql.Date checkOutDate = java.sql.Date.valueOf(checkOutLocal);
+
+            BookingManager bm = new BookingManager();
+
+            // Check for duplicate booking
+            if (bm.isDuplicateBooking(fullName, email, phone, roomNo, roomType, checkInDate, checkOutDate)) {
+                JOptionPane.showMessageDialog(this, "Duplicate booking found! You cannot make the same booking.");
+                return;
+            }
+
+            // Insert if all is good
+            bm.insertBooking(fullName, email, phone, roomNo, roomType, checkInDate, checkOutDate);
+            JOptionPane.showMessageDialog(this, "Booking submitted successfully!");
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error: " + e.getMessage());
+        }
+
+
+
+    }//GEN-LAST:event_SubmitButtonActionPerformed
 
     /**
      * @param args the command line arguments
@@ -88,6 +466,39 @@ public class BookARoom extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton Book;
+    private javax.swing.JButton Book2;
+    private javax.swing.JButton Book3;
+    private javax.swing.JButton Book4;
+    private javax.swing.JButton Book5;
+    private com.github.lgooddatepicker.components.DatePicker CheckInDate;
+    private com.github.lgooddatepicker.components.DatePicker CheckOutDate;
+    private javax.swing.JTextField EmailField;
+    private javax.swing.JTextField FullNameField;
+    private javax.swing.JButton MainMenu;
+    private javax.swing.JTextField PhoneNumberField;
+    private javax.swing.JComboBox<String> RoomNumber;
+    private javax.swing.JComboBox<String> RoomType;
+    private javax.swing.JButton SubmitButton;
+    private javax.swing.JButton XButton;
+    private javax.swing.JPanel bookingPanel;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JSeparator jSeparator1;
     // End of variables declaration//GEN-END:variables
 }
