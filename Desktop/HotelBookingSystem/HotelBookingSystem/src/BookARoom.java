@@ -11,6 +11,8 @@ import java.time.LocalDate;
 import java.sql.Date;
 import javax.swing.JOptionPane;
 import Project2.BookingManager; // adjust if needed
+import Project2.CustomerManager;
+import Project2.Customers;
 
 public class BookARoom extends javax.swing.JFrame {
     
@@ -37,13 +39,31 @@ public class BookARoom extends javax.swing.JFrame {
     /**
      * Creates new form BookARoom
      */
-    public BookARoom() {
+    private String currentFullName;
+
+    public BookARoom(String fullName) {
         initComponents();
-        
-        
+        this.currentFullName = fullName;
         bookingPanel.setVisible(false);
+        
+        // Fetch the customer info using the full name
+        CustomerManager cm = new CustomerManager();
+        Customers customer = cm.getCustomerByFullName(currentFullName);
+
+        // Pre-fill the text fields
+        if (customer != null) {
+            FullNameField.setText(customer.getFullName());
+            EmailField.setText(customer.getEmail());
+            PhoneNumberField.setText(customer.getPhoneNumber());
+
+            
+            FullNameField.setEditable(false); 
+            EmailField.setEditable(false);
+            PhoneNumberField.setEditable(false);
+        }
 
     }
+
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -304,10 +324,13 @@ public class BookARoom extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void MainMenuActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MainMenuActionPerformed
-        MainMenu MainMenuWindow = new MainMenu("Guest");
+        MainMenu MainMenuWindow = new MainMenu(currentFullName); // Pass the stored user name
         MainMenuWindow.setVisible(true);
-        MainMenuWindow.setLocationRelativeTo(null); // Center the window
-        this.dispose(); // Close the current BookARoom window
+        MainMenuWindow.setLocationRelativeTo(null);
+        this.dispose();
+
+
+
 
     }//GEN-LAST:event_MainMenuActionPerformed
 
@@ -383,19 +406,19 @@ public class BookARoom extends javax.swing.JFrame {
             String email = EmailField.getText().trim();
             String phone = PhoneNumberField.getText().trim();
 
-            // ✅ Validation logic
+            //  Validation logic
             if (fullName.isEmpty() || email.isEmpty() || phone.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields must be filled.");
                 return;
             }
 
-            // ✅ Phone must be 10 digits (numbers only)
+            // Phone must be 10 digits (numbers only)
             if (!phone.matches("\\d{10}")) {
                 JOptionPane.showMessageDialog(this, "Phone number must be 10 digits.");
                 return;
             }
 
-            // ✅ Email must contain '@' and end with '.com'
+            // Email must contain '@' and end with '.com'
             if (!email.contains("@") || !email.endsWith(".com")) {
                 JOptionPane.showMessageDialog(this, "Please enter a valid email address.");
                 return;
@@ -460,7 +483,7 @@ public class BookARoom extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new BookARoom().setVisible(true);
+                new BookARoom("Test User").setVisible(true);
             }
         });
     }
